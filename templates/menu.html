@@ -1,0 +1,18 @@
+{% load static %}
+{% load site %}
+<ul class="nav nav-tabs border-0 flex-column flex-lg-row">
+
+	{% for item in menu %}
+	<li class="nav-item{% if item.subpages %} dropdown{% endif %}">
+		<a href="{% if item.url %}{% if item.url != '#' %}{% current_domain %}/{% endif %}{{ item.url }}{% else %}javascript:void(0){% endif %}" class="nav-link{% if item.activated %} active{% endif %}{% if item.disabled %} disabled{% endif %}"{% if item.subpages %} data-toggle="dropdown"{% endif %}>{% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %} {{ item.name }}{% if item.count %} <span class="badge badge-pill bg-primary text-white ml-2">{{ item.count }}</span>{% endif %}</a>
+
+		{% if item.subpages %}
+			<div class="dropdown-menu dropdown-menu-arrow">
+				{% for subitem in item.subpages %}
+					<a href="{% current_domain %}/{{ subitem.url }}" class="dropdown-item{% if item.activated %} active{% endif %}">{{ subitem.name }}</a>
+				{% endfor %}
+			</div>
+		{% endif %}
+	</li>
+	{% endfor %}
+</ul>
