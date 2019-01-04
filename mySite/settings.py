@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'mySite',
+    'menus',
+    'mptt',
     'polls.apps.PollsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
