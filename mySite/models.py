@@ -1,74 +1,164 @@
-import datetime
-
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#   * Rearrange models' order
+#   * Make sure each model has one field with primary_key=True
+#   * Make sure each OneToOneField has `on_delete` set to the desired behavior.
+#   * Remove `managed = True` lines if you wish to allow Django to create, modify, and delete the table
+# Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-from django.utils import timezone
 
-# Classe Etudiant
-class Etudiant(models.Model):
-    SEXE_CHOICES=(
-        ('M','Masculin'),
-        ('F','Féminin'),
-    )
-    # Les champs de la classe Etudiant
-    matricule=models.CharField(max_length=8, primary_key=True)
-    nom=models.CharField(max_length=50)
-    prenom=models.CharField(max_length=50, blank=True, null=True)
-    date=models.DateField()
-    lieuNaiss=models.CharField(max_length=50)
-    sexe=models.CharField(max_length=1, choices=SEXE_CHOICES)
-    login=models.CharField(max_length=50)
-    motPasse=models.CharField(max_length=50)
-    # Les méthodes de la classe Etudiant
+GENRE_CHOICES = (('M', 'Masculin'), ('F', 'Féminin'))
 
-# Classe UE
-class Ue(models.Model):
-    codeUE=models.CharField(max_length=6, primary_key=True)
-    nomUE=models.CharField(max_length=50)
-    # Les méthodes de la classe UE
-
-# Classe Semestre
-class Semestre(models.Model):
-    SEMESTRE_CHOICES=(
-        ('S1','Semestre 1'),
-        ('S2','Semestre 2'),
-        ('S3','Semestre 3'),
-        ('S4','Semestre 4'),
-        ('S5','Semestre 5'),
-        ('S6','Semestre 6'),
-    )
-    codeSemestre=models.IntegerField()
-    nomSemestre=models.CharField(max_length=1, choices=SEMESTRE_CHOICES)
-    # Les méthodes de la classe Semestre
-
-# Classe SujetEvaluation
-class SujetEvaluation(models.Model):
-    nomSujet=models.CharField(max_length=50)
-    session=models.IntegerField()
-    date=models.DateField()
-    # Les méthodes de la classe SujetEvaluation
-
-# Classe Filiere
 class Filiere(models.Model):
-    FILIERE_CHOICES=(
-        ('GEO','Géographe'),
-        ('HIS','Histoire'),
-        ('INF','Informatique'),
-        ('MAT','Mathématiques'),
-        ('DRT','Droit'),
-        ('LIT','Littérature et Langue'),
-    )
-    codeFiliere=models.IntegerField()
-    filiere=models.CharField(max_length=1, choices=FILIERE_CHOICES)
-    # Les méthodes de la classe Filiere
+    libelle = models.TextField()
+    code = models.CharField(max_length=50)
 
-# Classe Periode
-class Periode(models.Model):
-    dateDebut=models.DateField()
-    dateFin=models.DateField()
-    # Les méthodes de la classe Periode
+    def __str__(self):
+        return self.libelle
 
-# Classe Niveau
+    class Meta:
+        managed = True
+        db_table = 'Filiere'
+
+
 class Niveau(models.Model):
-    libelle=models.CharField(max_length=50)
-    abbreviation=models.CharField(max_length=10)
-    # Les méthodes de la classe Niveau
+    libelle = models.CharField(max_length=50)
+    abr = models.CharField(max_length=20, blank=True, null=True)
+
+    def __str__(self):
+        return self.libelle
+
+    class Meta:
+        managed = True
+        db_table = 'Niveau'
+
+
+class Semestre(models.Model):
+    libelle = models.CharField(max_length=50)
+    abr = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.libelle
+
+    class Meta:
+        managed = True
+        db_table = 'Semestre'
+
+
+class Etudiant(models.Model):
+    matricule = models.CharField(max_length=50, unique=True)
+    nom = models.CharField(max_length=50)
+    prenom = models.CharField(max_length=50, blank=True, null=True)
+    sexe = models.CharField(max_length=1, choices=GENRE_CHOICES)
+    datenaiss = models.DateField(db_column='dateNaiss')  # Field name made lowercase.
+    lieunaiss = models.CharField(db_column='lieuNaiss', max_length=50, blank=True, null=True)   # Field name made lowercase.
+    email = models.CharField(max_length=255)
+    mdp = models.TextField()
+    date = models.DateField()
+
+    def __str__(self):
+        return self.matricule
+
+    class Meta:
+        managed = True
+        db_table = 'etudiant'
+
+
+class EtudiantEvaluation(models.Model):
+    etudiant = models.OneToOneField(Etudiant, models.CASCADE)
+    evaluation = models.OneToOneField('Evaluation', models.CASCADE)
+
+    class Meta:
+        managed = True
+        db_table = 'etudiant_evaluation'
+
+
+class EtudiantFnPeriode(models.Model):
+    etudiant = models.OneToOneField(Etudiant, models.CASCADE)
+    filiere_niveau = models.OneToOneField('FiliereNiveau', models.CASCADE)
+    periode = models.OneToOneField('Periode', models.CASCADE)
+
+    class Meta:
+        managed = True
+        db_table = 'etudiant_filiere_niveau_periode'
+
+
+class Evaluation(models.Model):
+    ue_fn = models.OneToOneField('UeFiliereNiveau', models.CASCADE)
+    semestre = models.OneToOneField('Semestre', models.CASCADE)
+    type_evaluation = models.OneToOneField('TypeEvaluation', models.CASCADE)
+    session = models.OneToOneField('Session', models.CASCADE, related_name='fk_Evaluation')
+    periode = models.OneToOneField('Periode', models.CASCADE)
+
+    class Meta:
+        managed = True
+        db_table = 'evaluation'
+
+
+class FiliereNiveau(models.Model):
+    filiere = models.OneToOneField('Filiere', models.CASCADE)
+    niveau = models.OneToOneField('Niveau', models.CASCADE)
+
+    class Meta:
+        managed = True
+        db_table = 'filiere_niveau'
+
+
+class Periode(models.Model):
+    datedebut = models.DateField(db_column='dateDebut')  # Field name made lowercase.
+    datefin = models.DateField(db_column='dateFin')  # Field name made lowercase.
+
+    def __str__(self):
+        return "Du " + self.datedebut + " au " + self.datefin
+
+    class Meta:
+        managed = True
+        db_table = 'periode'
+
+
+class Session(models.Model):
+    Evaluation = models.OneToOneField(Evaluation, models.CASCADE, related_name='fk_Session')
+    debut = models.DateField()
+    fin = models.DateField()
+
+    def __str__(self):
+        return "Du " + self.debut + " au " + self.fin
+
+    class Meta:
+        managed = True
+        db_table = 'session'
+
+
+class TypeEvaluation(models.Model):
+    libelle = models.CharField(max_length=200)
+    abr = models.CharField(max_length=20, blank=True, null=True)
+
+    def __str__(self):
+        return self.libelle
+    
+
+    class Meta:
+        managed = True
+        db_table = 'type_evaluation'
+
+
+class Ue(models.Model):
+    nom = models.TextField()
+    code = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nom
+
+    class Meta:
+        managed = True
+        db_table = 'ue'
+
+
+class UeFiliereNiveau(models.Model):
+    ue = models.OneToOneField(Ue, models.CASCADE)
+    filiere_niveau = models.OneToOneField(FiliereNiveau, models.CASCADE)
+    code = models.CharField(max_length=50)
+
+    class Meta:
+        managed = True
+        db_table = 'ue_filiere_niveau'

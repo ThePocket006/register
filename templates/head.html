@@ -20,7 +20,7 @@
 
 <!-- Generated: {{ site.time }} -->
 
-<title>{% block title %}Register{% endblock %}</title>
+<title>Register{% if title %} - {{ title }} {% endif %}</title>
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
@@ -32,5 +32,6 @@
 </script>
 
 <!-- Dashboard Core -->
+<link href="{% static 'mySite/css/bootstrap-glyphicons.min.css' %}" rel="stylesheet" />
 <link href="{% static 'mySite/css/dashboard.css' %}" rel="stylesheet" />
 <script src="{% static 'mySite/js/dashboard.js' %}"></script>

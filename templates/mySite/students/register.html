@@ -1,19 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head> 
-	<style> label {display: block; width: 200px; float: left;} </style>
-   <title>Eregistration System</title>
-</head>
-<body>
-   <h1>Formulaire d'enregistrement d'un &eacutetudiant</h1>
-   <label for="nom">Nom :</label><input type="text" id="nom" /><br />
-	<label for="prenom">Pr&eacutenom :</label><input type="text" id="prenom"/><br />
-	<label for="email">Adresse email :</label><input type="text" id="email"/><br />
-	<label for="dateNaiss">Date de Naissance :</label><input type="text" id="dateNaiss"/><br />
-	<label for="lieuNaiss">Lieu de Naissance :</label><input type="text" id="lieuNaiss"/><br />	
-	<label for="sexe">Sexe :</label><select id="sexe"><option>Masculin</option><option>F&eacuteminin</option></select><br />
-	<label for="login">Login :</label><input type="text" id="login"/><br />
-	<label for="passaword">Mot de Passe :</label><input type="password" id="password"/><br />
-	<label for="valider">           </label><input type="submit" value="Valider"/>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+	<div class="row mt-2">
+	<div class="col col-10 mx-auto">
+	<div class="card">
+		   <div class="card-header h1">
+			   	<p class="text-center">Enregistrement d'un &eacutetudiant</p>
+		   </div>
+		   <div class="card-body">
+			   	<p class="card-text">
+					<form action="{% url 'Register' %}" method="post">
+						<div class="px-6">
+							{% csrf_token %}
+							{{ form|crispy }}
+							<div class="form-footer">
+								<button type="submit" class="btn btn-primary btn-block col-3 pull-right">Enregister</button>
+							</div>
+						</div>
+					</form>
+			   </p>
+		   </div>
+		   <div class="card-footer text-muted">
+			   NB: Les champs dont le <strong><i>label</i></strong> est precedé de <span class="bold">*</span> sont obligatoire.
+		   </div>
+	</div>
+	</div>
+	</div>
+	<script>
+		require(['bootstrap-datetimepicker.widget', 'jquery.steps'], ()=>{
+		})
+	</script>
+{% endblock %}

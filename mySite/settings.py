@@ -31,17 +31,29 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'mySite',
-    'menus',
-    'mptt',
-    'polls.apps.PollsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # internal apps
+    'mySite',
+    'api.apps.ApiConfig',
+    # dependencies
+    'bootstrap4',
+    'django_baseurl',
+    'bootstrap_datepicker_plus',
+    'formtools',
+    'crispy_forms',
+    'widget_tweaks',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,6 +82,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_baseurl.context_processors.baseurl',
             ],
         },
     },
@@ -99,9 +112,20 @@ DATABASES = {
         'PASSWORD': 'root',
         'NAME': 'django2',
         'TEST': {
-            'NAME': 'django2_test',
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            # 'NAME': 'django2_test',
         },
-    }
+    }#,
+    # 'django': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'USER': 'root',
+    #     'PASSWORD': 'root',
+    #     'NAME': 'django_register',
+    #     'TEST': {
+    #         'NAME': 'django2_test',
+    #     },
+    # }
 }
 
 

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+	<div class="row mt-2">
+	<div class="col col-10 mx-auto">
+	<div class="card">
+		   <div class="card-header h1">
+			   	<p class="text-center">Complété vous informations</p>
+		   </div>
+		   <div class="card-body">
+			   	<p class="card-text">
+					<form action="{% url 'Register' %}" method="post">
+						<div class="px-6">
+							{% csrf_token %}
+							{{ form|crispy }}
+							<div class="form-footer">
+								<button type="submit" class="btn btn-primary btn-block col-3 pull-right">Enregister</button>
+							</div>
+						</div>
+					</form>
+			   </p>
+		   </div>
+		   <div class="card-footer text-muted">
+			   NB: Les champs dont le <strong><i>label</i></strong> est precedé de <span class="bold">*</span> sont obligatoire.
+		   </div>
+	</div>
+	</div>
+	</div>
+	{% comment %} <script>
+		require(['bootstrap-datetimepicker.widget', 'jquery.steps'], ()=>{
+		})
+	</script> {% endcomment %}
+{% endblock %}
